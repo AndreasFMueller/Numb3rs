@@ -1,0 +1,16 @@
+In diesem Verzeichnis befinden sich zwei Programme, die in der Numb3rs-Folge
+"Jacked" verwendet wurden, in der es um Diffie-Hellman, elliptische Kurven
+in der Kryptographie und die Vermutung von Birch und Swinnerton-Dyer ging.
+
+Verzeichnis	Inhalt
+
+ec              Berechnungen auf einer elliptischen Kurve
+
+bsd             Punkte auf einer elliptischen Kurve mod p zaehlen, Plots
+                zur Illustration der Vermutung von Birch und Swinnerton-Dyer
+                erstellen
+
+
+
+
+
