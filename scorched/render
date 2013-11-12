@@ -6,10 +6,33 @@
 #
 cd images || exit 1
 
-for f in *.mp
-do
-	m=`basename $f .mp`
-	mpost $f
-	mptopdf ${m}.1
-	mv ${m}-1.pdf ${m}.pdf
-done
+makepdf () {
+	for f in *.mp
+	do
+		m=`basename $f .mp`
+		mpost $f
+		mptopdf ${m}.1
+		mv ${m}-1.pdf ${m}.pdf
+	done
+}
+
+set -x
+
+makejpg () {
+	for pdffile in *.pdf
+	do
+		m=`basename ${pdffile} .pdf`
+		pnmfile=${m}.pnm
+		gs -dNOPAUSE -g1600x1088 -sDEVICE=pnm -q -dBATCH \
+			-sOutputFile=${pnmfile} -r350 ${pdffile}
+		jpgfile=${m}.jpg
+		pnmpad -white -left=20 -bottom=10 ${pnmfile} | \
+			pamcut -width 1600 -top 10 -height 1088 | \
+			pnmscale 0.5 | \
+			pnmtojpeg > ${jpgfile}
+		rm ${pnmfile}
+		echo ${jpgfile}
+	done
+}
+
+makejpg
