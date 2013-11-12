@@ -34,8 +34,8 @@ class rotation {
 	point_t	column1, column2;
 public:
 	rotation(const double& angle) {
-		column1 = point_t(cos(angle), -sin(angle));
-		column2 = point_t(sin(angle), cos(angle));
+		column1 = point_t(cos(angle), sin(angle));
+		column2 = point_t(sin(-angle), cos(angle));
 	}
 	point_t	operator()(const point_t& v) const {
 		return v.first * column1 + v.second * column2;

@@ -5,8 +5,8 @@
 #
 all:	lrpca
 
-liblrpca.a:	lr.o pca.o pointcloud.o point.o
-	ar cr liblrpca.a lr.o pca.o pointcloud.o point.o
+liblrpca.a:	lr.o pca.o pointcloud.o point.o image.o
+	ar cr liblrpca.a lr.o pca.o pointcloud.o point.o image.o
 
 lr.o:	lr.cpp lr.h pointcloud.h point.h
 	g++ -Wall -O2 -g -o lr.o -c lr.cpp
@@ -20,5 +20,11 @@ pointcloud.o:	pointcloud.cpp pointcloud.h point.h
 point.o:	point.cpp point.h
 	g++ -Wall -O2 -g -o point.o -c point.cpp
 
+image.o:	image.cpp image.h
+	g++ -Wall -O2 -g -o image.o -c image.cpp
+
 lrpca:	lrpca.cpp liblrpca.a
 	g++ -Wall -O2 -g -o lrpca lrpca.cpp liblrpca.a
+
+test:	lrpca
+	./lrpca

@@ -1,0 +1,15 @@
+#! /bin/sh
+#
+# render all images into a video
+#
+# (c) 2013 Prof Dr Andreas Mueller, Hochschule Rapperswil
+#
+cd images || exit 1
+
+for f in *.mp
+do
+	m=`basename $f .mp`
+	mpost $f
+	mptopdf ${m}.1
+	mv ${m}-1.pdf ${m}.pdf
+done

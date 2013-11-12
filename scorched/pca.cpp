@@ -28,9 +28,9 @@ pca::pca(const pointcloud_t& data) {
 	double	d = sqrt(sqr(delta) + 4 * sqr(XY));
 	_l1 = 0.5 * (trace + d);
 	_l2 = 0.5 * (trace - d);
-	_v1 = point_t(-XY, 0.5 * (delta - d));
+	_v1 = point_t(XY, 0.5 * (d - delta));
 	_v1 = _v1 / norm(_v1);
-	_v2 = point_t(-XY, 0.5 * (delta + d));
+	_v2 = point_t(XY, -0.5 * (delta + d));
 	_v2 = _v2 / norm(_v2);
 }
 

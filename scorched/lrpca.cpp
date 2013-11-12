@@ -8,28 +8,50 @@
 #include "pointcloud.h"
 #include "lr.h"
 #include "pca.h"
+#include "image.h"
 
 #include <cstdio>
 #include <cstdlib>
 #include <vector>
 #include <iostream>
+#include <fstream>
+
+double	angle(const double t) {
+	double	m = 1;
+	if (t != 0) {
+		m = 1 + exp(1 - 1/fabs(t));
+	}
+	return M_PI * 0.5 * m;
+}
+
+double	angle2(const double t) {
+	return M_PI * 0.5 * (1 + t * t * t);
+}
 
 int	main(int argc, char *argv[]) {
-	pointgenerator	pg(10, 0.5);
-	pointcloud_t	data = pg(100);
+	pointgenerator	pg(10, 1.5);
+	pointcloud_t	data = pg(10);
 	data = data - center(data);
 
-	point_t	c = center(data);
-	std::cout << c << std::endl;
-
-	for (double angle = 0; angle < 3; angle += 0.1) {
-		rotation	rot(angle);
+	double	step = 0.005;
+	int	counter = 0;
+	for (double t = -1; t < 1; t += step) {
+		double	a = angle2(t);
+		rotation	rot(a);
+		std::cout << a << ": ";
 		pointcloud_t	rotated_data = rot * data;
 		lr	l(rotated_data);
-		std::cout << l;
+		std::cout << l.a() << ", ";
 		pca	p(rotated_data);
-		std::cout << p;
-		std::cout << "scalar product: " << p.v1() * p.v2() << std::endl;
+		std::cout << p.v1();
+		std::cout << std::endl;
+		char	filename[32];
+		snprintf(filename, sizeof(filename), "images/i%04d.mp",
+			counter++);
+	
+		std::ofstream	f(filename);
+		f << image(rotated_data, l, p);
+		f.close();
 	}
 
 	return EXIT_SUCCESS;
