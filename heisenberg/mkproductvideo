@@ -1,0 +1,49 @@
+#! /bin/sh
+#
+# mkproductvideo -- make the product video
+#
+# (c) 2014 Prof Dr Andreas Mueller, Hochschule Rapperswil
+#
+
+cd prod || exit 1
+
+if true
+then
+	for filename in *.mp
+	do
+		b=`basename ${filename} .mp`
+		TEX=latex mpost ${filename}
+		mpname=${b}.1
+		mptopdf ${mpname}
+		pdfname=${b}-1.pdf
+		jpgname=${b}.jpg
+		gs -sDEVICE=jpeg -dBATCH -q -dNOPAUSE -r229 -g1024x624 \
+				-sOutputFile=${jpgname} ${pdfname}
+	done
+fi
+
+i=0
+while [ $i -le 100 ]
+do
+	f1=`printf i%04d.jpg $i`
+	j=$i
+	while [ $j -lt 1010 ]
+	do
+		j=`expr $j + 202`
+		f2=`printf i%04d.jpg $j`
+		cp $f1 $f2
+		echo $f2
+	done
+	j=`expr 201 - $i `
+	while [ $j -lt 1000 ]
+	do
+		f2=`printf i%04d.jpg $j`
+		cp $f1 $f2
+		echo $f2
+		j=`expr $j + 202`
+	done
+	i=`expr $i + 1`
+done
+
+jpeg2yuv -j i%04d.jpg -f 25 -I p -L 0 | \
+	mpeg2enc -f 9 --no-constraints -b 15000 -o product.mpg
